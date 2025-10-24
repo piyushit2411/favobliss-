@@ -19,6 +19,7 @@ interface Query {
   pincode?: number;
   rating?: string;
   discount?: string;
+  selectFields?: string[];
 }
 
 interface HotDealsQuery extends Query {
@@ -26,7 +27,7 @@ interface HotDealsQuery extends Query {
 }
 
 export const getProducts = async (
-  query?: Query
+  query: Query = {}
 ): Promise<{ products: Product[]; totalCount: number }> => {
   const url = qs.stringifyUrl({
     url: URL,
@@ -45,33 +46,39 @@ export const getProducts = async (
       ...(query?.subCategoryId && { subCategoryId: query.subCategoryId }),
       ...(query?.rating && { rating: query.rating }),
       ...(query?.discount && { discount: query.discount }),
+      ...(query?.selectFields && { select: query.selectFields.join(",") }),
     },
   });
 
   try {
     const res = await fetch(url, {
-      cache: "no-store",
+      cache: "force-cache",
+      next: { revalidate: 600 },
     });
 
     if (!res.ok) {
-      console.error("getProducts fetch error:", res.status, res.statusText);
+      console.error(`getProducts fetch error: ${res.status} ${res.statusText}`);
       return { products: [], totalCount: 0 };
     }
 
     const text = await res.text();
-
     if (!text) {
       console.warn("getProducts: empty response");
       return { products: [], totalCount: 0 };
     }
 
     const data = JSON.parse(text);
+    if (!data?.products) {
+      console.warn("getProducts: no products in response");
+      return { products: [], totalCount: 0 };
+    }
+
     return {
       products: data.products,
-      totalCount: data.totalCount,
+      totalCount: data.totalCount || 0,
     };
   } catch (error) {
-    console.error("getProducts JSON parse or network error:", error);
+    console.error("getProducts error:", error);
     return { products: [], totalCount: 0 };
   }
 };
@@ -93,21 +100,20 @@ export const getHotDeals = async (query: HotDealsQuery): Promise<Product[]> => {
     });
 
     if (!res.ok) {
-      console.error("getHotDeals fetch error:", res.status, res.statusText);
+      console.error(`getHotDeals fetch error: ${res.status} ${res.statusText}`);
       return [];
     }
 
     const text = await res.text();
-
     if (!text) {
       console.warn("getHotDeals: empty response");
       return [];
     }
 
     const data = JSON.parse(text);
-    return data;
+    return data || [];
   } catch (error) {
-    console.error("getHotDeals JSON parse or network error:", error);
+    console.error("getHotDeals error:", error);
     return [];
   }
 };
