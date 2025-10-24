@@ -13,7 +13,7 @@ export const revalidate = 600;
 
 export async function generateStaticParams() {
   try {
-    const products = await getProducts({ selectFields: ["variants.slug"] }); 
+    const products = await getProducts({ selectFields: ["variants.slug"], limit:"1000" }); 
     if (!products?.products?.length) {
       console.warn("generateStaticParams: No products found");
       return [];
