@@ -102,6 +102,7 @@ export interface Product {
   averageRating: number;
   subCategory: SubCategory;
   productId: string;
+  slug: string;
 }
 
 export interface Brand {

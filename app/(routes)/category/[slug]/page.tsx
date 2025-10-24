@@ -16,8 +16,16 @@ import Breadcrumb from "@/components/store/Breadcrumbs";
 import { getSubCategoryBySlug } from "@/actions/get-subcategory";
 import { getLocationGroups } from "@/actions/get-location-group";
 import { getBrands } from "@/actions/get-brands";
+import { getCategories } from "@/actions/get-categories";
 
 export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const categories = await getCategories(); 
+  return categories.map((category) => ({
+    slug: category.slug,
+  }));
+}
 
 async function withRetry<T>(
   fn: () => Promise<T>,
@@ -35,7 +43,6 @@ async function withRetry<T>(
 
 interface CategoryPageProps {
   params: {
-    storeId: string;
     slug: string;
   };
   searchParams: {

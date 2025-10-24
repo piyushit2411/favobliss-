@@ -1,15 +1,22 @@
 import { getProductBySlug } from "@/actions/get-product";
-import { getProducts } from "@/actions/get-products";
 import { getLocationGroups } from "@/actions/get-location-group";
 import { redirect } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import { ProductPageContent } from "@/components/store/ProductPageClient";
+import { getProducts } from "@/actions/get-products";
 
 interface ProductPageProps {
   params: { storeId: string; slug: string };
 }
 
-export const revalidate = 600; 
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const products = await getProducts({}); 
+  return products.products.map((product) => ({
+    slug: product.slug,
+  }));
+}
 
 export async function generateMetadata(
   { params }: ProductPageProps,
@@ -67,20 +74,18 @@ export async function generateMetadata(
 }
 
 const ProductPage = async ({ params }: ProductPageProps) => {
-  // Parallelize fetches
   const [productData, productsData, locationGroups] = await Promise.all([
     getProductBySlug(params.slug),
     getProducts({
-      categoryId: "", // Set dynamically below
+      categoryId: "",
       limit: "10",
-    }).catch(() => ({ products: [] })), // Fallback for robustness
-    getLocationGroups().catch(() => []), // Fallback
+    }).catch(() => ({ products: [] })),
+    getLocationGroups().catch(() => []),
   ]);
 
   if (!productData || !productData.variant || !productData.allVariants.length) {
     redirect("/");
   }
-
 
   const productsDataWithCategory = productData.product?.category?.id
     ? await getProducts({
