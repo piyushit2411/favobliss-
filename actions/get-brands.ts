@@ -9,8 +9,7 @@ export const getBrands = async (): Promise<Brand[]> => {
     next: { revalidate: 600 },
   });
   if (!res.ok) {
-    notFound();
-    // throw new Error("Brands not found");
+    return [];
   }
   return res.json();
 };

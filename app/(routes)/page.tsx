@@ -31,15 +31,7 @@ import { getHomepageCategory } from "@/actions/get-homepage-categories";
 export const revalidate = 600;
 
 const LandingPage = async ({ params }: { params: { storeId: string } }) => {
-  const [
-    { products: allProducts },
-    { products: featured },
-    categories,
-    locationGroups,
-    brands,
-    { products: brandProds },
-    homepageCategories,
-  ] = await Promise.all([
+  const results = await Promise.allSettled([
     getProducts(),
     getProducts({ isFeatured: true }),
     getCategories(),
@@ -48,6 +40,39 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
     getProducts({ brandId: "687247fbfefe791c5521f384" }),
     getHomepageCategory(),
   ]);
+
+  // Extract results with fallback values for rejected promises
+  const [
+    allProductsResult,
+    featuredResult,
+    categoriesResult,
+    locationGroupsResult,
+    brandsResult,
+    brandProdsResult,
+    homepageCategoriesResult,
+  ] = results;
+
+  const allProducts =
+    allProductsResult.status === "fulfilled"
+      ? allProductsResult.value.products
+      : [];
+  const featured =
+    featuredResult.status === "fulfilled" ? featuredResult.value.products : [];
+  const categories =
+    categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
+  const locationGroups =
+    locationGroupsResult.status === "fulfilled"
+      ? locationGroupsResult.value
+      : [];
+  const brands = brandsResult.status === "fulfilled" ? brandsResult.value : [];
+  const brandProds =
+    brandProdsResult.status === "fulfilled"
+      ? brandProdsResult.value.products
+      : [];
+  const homepageCategories =
+    homepageCategoriesResult.status === "fulfilled"
+      ? homepageCategoriesResult.value
+      : [];
 
   return (
     <>
