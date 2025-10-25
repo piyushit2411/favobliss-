@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Heart, LogOut, ShoppingCart, Store, User } from "lucide-react";
+import { Heart, LogOut, ShoppingCart, Store, User, Headphones } from "lucide-react";
 import { MdLogin, MdPersonAdd } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -81,13 +81,13 @@ export const Account = () => {
               <ShoppingCart className="mr-3 h-4 w-4" />
               Orders
             </DropdownMenuItem>
-            {/* <DropdownMenuItem
+            <DropdownMenuItem
               className="flex items-center text-zinc-700 font-semibold md:cursor-pointer"
-              onClick={() => router.push("/wishlist")}
+              onClick={() => router.push("/contact-us")}
             >
-              <Heart className="mr-3 h-4 w-4" />
-              Wishlist
-            </DropdownMenuItem> */}
+              <Headphones className="mr-3 h-4 w-4" />
+              Support
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="flex items-center text-zinc-700 font-semibold md:cursor-pointer"

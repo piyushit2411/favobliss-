@@ -22,7 +22,7 @@ const PremiumProductsSection: React.FC<PremiumProductsSectionProps> = ({
 }) => {
   return (
     <div
-      className={`rounded-3xl w-full max-w-full px-4 py-8 md:p-8 pt-[200px] ${className}`}
+      className={`rounded-3xl w-full max-w-full px-4 py-8 md:p-8 md:pt-[48px] pt-[40px] ${className}`}
       style={{ backgroundColor }}
     >
       <div className="flex overflow-x-auto space-x-6 pb-1 md:pb-4 scrollbar-hide snap-x snap-mandatory justify-between">

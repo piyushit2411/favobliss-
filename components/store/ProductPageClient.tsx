@@ -105,7 +105,12 @@ export const ProductPageContent = ({
       try {
         if (selectedLocationGroupId) {
           const response = await getLocationGroupById(selectedLocationGroupId);
-          setLocationPinCode(response.locations[0]?.pincode || null);
+          const locationData = localStorage.getItem("locationData");
+          const pincodeData = response.locations.find(
+            (loc) =>
+              locationData && loc.pincode === JSON.parse(locationData).pincode
+          );
+          setLocationPinCode(pincodeData ? pincodeData.pincode : null);
         }
       } catch (error) {
         console.error("Failed to fetch location group:", error);

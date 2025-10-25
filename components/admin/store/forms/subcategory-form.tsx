@@ -51,6 +51,7 @@ export const SubCategoryForm = ({
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
+  const [slugCharCount, setSlugCharCount] = useState(0);
 
   const title = initialData ? "Edit Subcategory" : "Create Subcategory";
   const description = initialData
@@ -241,10 +242,17 @@ export const SubCategoryForm = ({
                   <FormControl>
                     <Input
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setSlugCharCount(e.target.value.length);
+                      }}
                       disabled={loading}
                       placeholder="Subcategory slug"
                     />
                   </FormControl>
+                  <div className="text-xs text-muted-foreground mt-1 pl-3">
+                    {slugCharCount} characters
+                  </div>
                   <FormDescription className="text-xs text-muted-foreground">
                     The slug must be unique, contain only lowercase letters,
                     numbers, and hyphens, and be at most 60 characters long.

@@ -103,6 +103,23 @@ export interface Product {
   subCategory: SubCategory;
   productId: string;
   slug: string;
+  coupons: Coupon[];
+}
+
+export interface Coupon {
+  id: string;
+  couponId: string;
+  productId: string;
+  createdAt: string;
+  updatedAt: string;
+  coupon: {
+    id: string;
+    code: string;
+    value: number;
+    description: string;
+    usagePerUser: number;
+    usedCount: number;
+  };
 }
 
 export interface Brand {
@@ -318,4 +335,23 @@ export interface Review {
   createdAt: string;
   userId: string;
   categoryRatings: { categoryName: string; rating: number }[];
+  customDate?: string | null;
+}
+
+export interface HomePageCategoryProduct {
+  id: string;
+  homepageCategoryId: string;
+  productId: string;
+  product: Product;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HomepageCategory {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  products: HomePageCategoryProduct[];
 }

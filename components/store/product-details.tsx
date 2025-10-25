@@ -28,6 +28,7 @@ import { useAddress } from "@/hooks/use-address";
 import { GoShareAndroid } from "react-icons/go";
 import { useShareModal } from "@/hooks/use-share-modal";
 import Link from "next/link";
+import CouponsOffer from "./Coupons-offer";
 
 interface ProductDetailsProps {
   productData: ProductApiResponse;
@@ -135,7 +136,6 @@ export const ProductDetails = (props: ProductDetailsProps) => {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { onOpen } = useShareModal();
 
   const uniqueSizes = Array.from(
     new Map(
@@ -758,36 +758,36 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     onVariantChange,
   ]);
 
- const handleSizeChange = useCallback(
-  (sizeId: string) => {
-    setSelectedSizeId(sizeId);
-    
-    // Find all available colors for the selected size
-    const availableColorsForSize = allVariants
-      .filter(v => v.sizeId === sizeId)
-      .map(v => v.colorId);
-    
-    // Check if current selected color is available for the new size
-    const isCurrentColorAvailable = selectedColorId && 
-      availableColorsForSize.includes(selectedColorId);
-    
-    if (isCurrentColorAvailable) {
-      // Keep the current color if it's available
-      return;
-    }
-    
-    // If current color is not available, try to find the first available color
-    const firstAvailableColor = availableColorsForSize[0];
-    
-    if (firstAvailableColor) {
-      setSelectedColorId(firstAvailableColor);
-    } else {
-      // If no colors available for this size, reset color selection
-      setSelectedColorId(undefined);
-    }
-  },
-  [allVariants, selectedColorId]
-);
+  const handleSizeChange = useCallback(
+    (sizeId: string) => {
+      setSelectedSizeId(sizeId);
+
+      // Find all available colors for the selected size
+      const availableColorsForSize = allVariants
+        .filter((v) => v.sizeId === sizeId)
+        .map((v) => v.colorId);
+
+      // Check if current selected color is available for the new size
+      const isCurrentColorAvailable =
+        selectedColorId && availableColorsForSize.includes(selectedColorId);
+
+      if (isCurrentColorAvailable) {
+        // Keep the current color if it's available
+        return;
+      }
+
+      // If current color is not available, try to find the first available color
+      const firstAvailableColor = availableColorsForSize[0];
+
+      if (firstAvailableColor) {
+        setSelectedColorId(firstAvailableColor);
+      } else {
+        // If no colors available for this size, reset color selection
+        setSelectedColorId(undefined);
+      }
+    },
+    [allVariants, selectedColorId]
+  );
 
   useEffect(() => {
     if (isPincodeChecked && selectedLocationGroupId) {
@@ -806,36 +806,36 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     setLocationPrice,
   ]);
 
- const handleColorChange = useCallback(
-  (colorId: string) => {
-    setSelectedColorId(colorId);
-    
-    // Find all available sizes for the selected color
-    const availableSizesForColor = allVariants
-      .filter(v => v.colorId === colorId)
-      .map(v => v.sizeId);
-    
-    // Check if current selected size is available for the new color
-    const isCurrentSizeAvailable = selectedSizeId && 
-      availableSizesForColor.includes(selectedSizeId);
-    
-    if (isCurrentSizeAvailable) {
-      // Keep the current size if it's available
-      return;
-    }
-    
-    // If current size is not available, try to find the first available size
-    const firstAvailableSize = availableSizesForColor[0];
-    
-    if (firstAvailableSize) {
-      setSelectedSizeId(firstAvailableSize);
-    } else {
-      // If no sizes available for this color, reset size selection
-      setSelectedSizeId(undefined);
-    }
-  },
-  [allVariants, selectedSizeId]
-);
+  const handleColorChange = useCallback(
+    (colorId: string) => {
+      setSelectedColorId(colorId);
+
+      // Find all available sizes for the selected color
+      const availableSizesForColor = allVariants
+        .filter((v) => v.colorId === colorId)
+        .map((v) => v.sizeId);
+
+      // Check if current selected size is available for the new color
+      const isCurrentSizeAvailable =
+        selectedSizeId && availableSizesForColor.includes(selectedSizeId);
+
+      if (isCurrentSizeAvailable) {
+        // Keep the current size if it's available
+        return;
+      }
+
+      // If current size is not available, try to find the first available size
+      const firstAvailableSize = availableSizesForColor[0];
+
+      if (firstAvailableSize) {
+        setSelectedSizeId(firstAvailableSize);
+      } else {
+        // If no sizes available for this color, reset size selection
+        setSelectedSizeId(undefined);
+      }
+    },
+    [allVariants, selectedSizeId]
+  );
 
   const discountPercentage =
     locationPrice.mrp > 0
@@ -1074,7 +1074,9 @@ export const ProductDetails = (props: ProductDetailsProps) => {
 
           <div className="mt-6 space-y-4">
             <div>
-              <BankOffers />
+              {productData?.product?.coupons?.length > 0 && (
+                <CouponsOffer coupons={productData.product.coupons} />
+              )}
             </div>
           </div>
           <div className="mt-4 border rounded-3xl p-4 bg-[#f6f4f4] ">

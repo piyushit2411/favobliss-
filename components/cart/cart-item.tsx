@@ -102,6 +102,21 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
           >
             {data.selectedVariant.name}
           </h3>
+          <div className="flex flex-col justify-end items-start gap-1 pt-2 flex-wrap md:hidden">
+            <div className="text-right flex gap-2 items-end flex-wrap">
+              <div className="text-sm font-bold text-gray-900">
+                {formatter.format(data.price)}
+              </div>
+              <div className="text-xs text-gray-500 line-through">
+                MRP ₹{data.mrp}
+              </div>
+              <div className="flex flex-col gap-1">
+                <div className="text-xs text-white bg-[#ee8e1d] rounded-full border border-transparent font-normal text-center px-2">
+                  {discountPercentage}% Off
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-1 space-y-1 hidden md:block">
             <p className="text-green-600 font-medium text-sm">In Stock</p>
@@ -165,8 +180,8 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-end items-start gap-1 pt-4 md:hidden">
-        <div className="text-right mx-4 flex gap-2 items-end">
+      <div className="flex flex-col justify-end items-start gap-1 md:hidden">
+        {/* <div className="text-right mx-4 flex gap-2 items-end">
           <div className="text-sm font-bold text-gray-900">
             {formatter.format(data.price)}
           </div>
@@ -178,7 +193,7 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
               {discountPercentage}% Off
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-end gap-3 w-full mt-3">
           <div className="flex items-center md:hidden">

@@ -9,9 +9,6 @@ export async function getReviews(productId: string): Promise<Review[]> {
   try {
     const res = await fetch(
       `${URL}/api/admin/${STORE_ID}/products/${productId}/reviews?page=1&limit=100`,
-      {
-        next: { revalidate: 600 }, 
-      }
     );
 
     if (!res.ok) {

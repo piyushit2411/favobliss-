@@ -38,7 +38,7 @@ export const MobileStickyActionBar = ({
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 transition-transform duration-300",
+        "fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10 transition-transform duration-300",
         show ? "translate-y-0" : "translate-y-full"
       )}
     >

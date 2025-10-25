@@ -7,7 +7,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useCheckoutAddress } from "@/hooks/use-checkout-address";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "@/actions/get-products";
 import { useCheckout } from "@/hooks/use-checkout";
 
@@ -125,40 +125,52 @@ const PricingDialog = ({
 export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
   const { onOpen } = useAddessModal();
   const { items, updateItemPrice, removeItem } = useCart();
-  const { addAddress } = useCheckoutAddress();
+  const { addAddress, address: selectedAddress } = useCheckoutAddress();
   const router = useRouter();
   const [showPricingDialog, setShowPricingDialog] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [selectedTempAddress, setSelectedTempAddress] = useState<Address | null>(null);
   const [mismatchedItems, setMismatchedItems] = useState<any[]>([]);
   const [isUpdatingPrices, setIsUpdatingPrices] = useState(false);
   const { updateItemCheckoutPrice } = useCheckout();
 
-  const defaultAddress =
-    data && data.find((address) => address.isDefault === true);
-  const otherAddresses =
-    data && data.filter((address) => address.isDefault === false);
+  // const defaultAddress =
+  //   data && data.find((address) => address.isDefault === true);
+  // const otherAddresses =
+  //   data && data.filter((address) => address.isDefault === false);
+
+    const defaultAddress = useMemo(
+    () => data?.find((address) => address.isDefault),
+    [data]
+  );
+
+  useEffect(() => {
+    if (!defaultAddress) return;
+    if (selectedAddress?.id === defaultAddress.id) return;
+
+    // Auto-select default address without triggering price dialog
+    addAddress(defaultAddress);
+  }, [defaultAddress, selectedAddress?.id, addAddress]);
+
+  // ────── OTHER ADDRESSES ──────
+  const otherAddresses = useMemo(
+    () => data?.filter((address) => !address.isDefault) ?? [],
+    [data]
+  );
 
   const handleAddressSelect = async (address: Address) => {
-    console.log("Selected address pincode:", address.zipCode);
-    console.log("Cart items:", items);
     const mismatched = items.filter((item) => {
       const isMismatch =
         String(item.pincode).trim() !== String(address.zipCode).trim();
-      console.log(
-        `Comparing item pincode ${item.pincode} with address pincode ${address.zipCode}: ${isMismatch}`
-      );
       return isMismatch;
     });
 
-    console.log("Mismatched items:", mismatched);
 
     if (mismatched.length === 0) {
-      console.log("No mismatched items, adding address:", address);
       addAddress(address);
       return;
     }
 
-    setSelectedAddress(address);
+    setSelectedTempAddress(address);
     setMismatchedItems(mismatched);
     setShowPricingDialog(true);
   };
@@ -176,8 +188,6 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
         pincode: selectedAddress.zipCode,
       });
 
-      console.log("API response for products:", response);
-
       for (const item of mismatchedItems) {
         const product = response.find((p) =>
           p.variants?.some((v) => v.id === item.selectedVariant.id)
@@ -191,19 +201,11 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
           const apiPincode = vp?.locationGroup?.locations?.find(
             (loc) => String(loc.pincode).trim() === targetPincode
           )?.pincode;
-          console.log(
-            `Checking variant price for pincode ${targetPincode}:`,
-            vp
-          );
           return String(apiPincode).trim() === targetPincode;
         });
 
-        console.log(`Found variant price for ${item.name}:`, variantPrice);
 
         if (variantPrice && variantPrice.price) {
-          console.log(
-            `Updating price for ${item.name}: price=${variantPrice.price}, mrp=${variantPrice.mrp}`
-          );
           updateItemPrice(
             item.selectedVariant.id,
             variantPrice.price,
@@ -221,9 +223,6 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
           );
           toast.success(`Updated price for ${item.name}`);
         } else {
-          console.log(
-            `Removing item ${item.name} because no price found for pincode ${selectedAddress.zipCode}`
-          );
           toast.warning(
             `The product ${item.name} is unavailable at this location (${selectedAddress.zipCode})`
           );
@@ -231,12 +230,9 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
         }
       }
 
-      // Only add the address if at least one item remains in the cart
       if (items.length > 0) {
-        console.log("Adding address after price update:", selectedAddress);
         addAddress(selectedAddress);
       } else {
-        console.log("Cart is empty after price update, not adding address");
         toast.error(
           "All items were removed from the cart. Please add items again."
         );
@@ -249,7 +245,7 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
         toast.error(
           "The entered pincode is invalid. Please enter a valid pincode or select a different address."
         );
-        setSelectedAddress(null);
+        setSelectedTempAddress(null);
       } else {
         toast.error("Failed to update prices for selected address");
       }
@@ -260,9 +256,8 @@ export const UserAddressCard = ({ data, label }: UserAddressCardProps) => {
   };
 
   const handleDialogClose = () => {
-    console.log("Closing pricing dialog");
     setShowPricingDialog(false);
-    setSelectedAddress(null);
+    setSelectedTempAddress(null);
     setMismatchedItems([]);
   };
 

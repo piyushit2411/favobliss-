@@ -11,6 +11,14 @@ export const ReviewSchema = z.object({
   images: z.array(z.string().url("Invalid image URL")).optional().default([]),
   videos: z.array(z.string().url("Invalid video URL")).optional().default([]),
   userId: z.string().min(1, "User ID is required"),
+  customDate: z
+    .union([
+      z.string().datetime({ message: "Invalid date format" }),
+      z.date(),
+    ])
+    .optional()
+    .nullable()
+    .default(null),
   categoryRatings: z
     .array(
       z.object({

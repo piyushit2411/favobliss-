@@ -91,6 +91,7 @@ export default function VariantForm({
 }: VariantFormProps) {
   const form = useFormContext<z.infer<typeof ProductSchema>>();
   const { control, getValues } = form;
+  const [slugCharCount, setSlugCharCount] = useState(0);
 
   const {
     fields: priceFields,
@@ -144,9 +145,16 @@ export default function VariantForm({
                 <Input
                   {...field}
                   placeholder="Variant slug"
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSlugCharCount(e.target.value.length);
+                  }}
                   disabled={disabled}
                 />
               </FormControl>
+              <div className="text-xs text-muted-foreground mt-1 pl-3">
+                {slugCharCount} characters
+              </div>
               <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
             </FormItem>
           )}

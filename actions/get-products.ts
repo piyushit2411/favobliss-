@@ -52,7 +52,6 @@ export const getProducts = async (
 
   try {
     const res = await fetch(url, {
-      cache: "force-cache",
       next: { revalidate: 600 },
     });
 

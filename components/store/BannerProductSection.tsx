@@ -38,7 +38,6 @@ const BannerProductSection = (props: Props) => {
             </div>
           </div>
 
-          {/* Products below banner for mobile - using Swiper */}
           <Swiper
             className="w-full"
             modules={[FreeMode, Mousewheel]}

@@ -7,7 +7,6 @@ export const CategoryFormSchema = z.object({
   slug: z
     .string()
     .min(1, "Slug is required")
-    .max(60, "Slug must be at most 60 characters")
     .regex(
       /^[a-z0-9-]+$/,
       "Slug must contain only lowercase letters, numbers, and hyphens"

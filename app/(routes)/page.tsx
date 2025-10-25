@@ -26,26 +26,27 @@ import BannerProductSection from "@/components/store/BannerProductSection";
 import BannerImage from "@/components/store/BannerImage";
 import HeroSliderMobile from "@/components/store/billboardMobile";
 import Head from "next/head";
+import { getHomepageCategory } from "@/actions/get-homepage-categories";
 
 export const revalidate = 600;
 
 const LandingPage = async ({ params }: { params: { storeId: string } }) => {
   const [
     { products: allProducts },
-    brandCategory,
     { products: featured },
     categories,
     locationGroups,
     brands,
     { products: brandProds },
+    homepageCategories,
   ] = await Promise.all([
     getProducts(),
-    getSubCategories("6843219ac338ba8cc9db1e72"),
     getProducts({ isFeatured: true }),
     getCategories(),
     getLocationGroups(params.storeId),
     getBrands(),
     getProducts({ brandId: "687247fbfefe791c5521f384" }),
+    getHomepageCategory(),
   ]);
 
   return (
@@ -80,9 +81,8 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
                 link="/latest-launches?page=1"
               />
               <PromotionalBanner
-                data={featured}
                 locationGroups={locationGroups}
-                categories={brandCategory}
+                categories={homepageCategories}
               />
               <FourImageGrid />
               {/* <div className="space-y-4 md:space-y-16">
@@ -126,10 +126,10 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
                 altText="banner"
               />
               <HomeAppliance
-                title=""
+                title="Blissful Upgrades"
                 categoryId="684321d4c338ba8cc9db1e75"
                 locationGroups={locationGroups}
-                link="/category/kitchen-appliances?page=1"
+                // link="/category/kitchen-appliances?page=1"
                 items={brandItems}
                 className="bg-[#c5aa94]"
               />

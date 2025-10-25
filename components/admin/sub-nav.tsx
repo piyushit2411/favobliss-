@@ -38,6 +38,12 @@ export const SubNav = ({
         icon: Home,
       },
       {
+        href: `/admin/homepage-categories`,
+        label: "Homepage Categories",
+        active: pathname === `/admin/homepage-categories`,
+        icon: Layers,
+      },
+      {
         href: `/admin/categories`,
         label: "Categories",
         active: pathname === `/admin/categories`,

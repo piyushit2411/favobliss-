@@ -310,7 +310,6 @@ export async function GET(
         select: { locationGroupId: true },
       });
       if (!location) {
-        console.log("Invalid pincode", pincode);
         return new NextResponse("Invalid pincode", { status: 404, headers });
       }
       resolvedLocationGroupId = location.locationGroupId;
@@ -389,6 +388,30 @@ export async function GET(
               reviews: {
                 select: {
                   rating: true,
+                },
+              },
+              coupons: {
+                where: {
+                  coupon: {
+                    isActive: true,
+                    startDate: { lte: new Date() },
+                    expiryDate: { gte: new Date() },
+                  },
+                },
+                include: {
+                  coupon: {
+                    select: {
+                      id: true,
+                      code: true,
+                      value: true,
+                      description: true,
+                      usagePerUser: true,
+                      usedCount: true,
+                    },
+                  },
+                },
+                orderBy: {
+                  createdAt: "desc",
                 },
               },
             },
@@ -564,6 +587,30 @@ export async function GET(
         reviews: {
           select: {
             rating: true,
+          },
+        },
+        coupons: {
+          where: {
+            coupon: {
+              isActive: true,
+              startDate: { lte: new Date() },
+              expiryDate: { gte: new Date() },
+            },
+          },
+          include: {
+            coupon: {
+              select: {
+                id: true,
+                code: true,
+                value: true,
+                description: true,
+                usagePerUser: true,
+                usedCount: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
           },
         },
       },

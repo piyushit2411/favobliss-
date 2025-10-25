@@ -9,7 +9,7 @@ import { ProductSkeleton } from "./product-skeleton";
 interface Props {
   categoryId: string;
   locationGroups: LocationGroup[];
-  link: string;
+  link?: string;
   items: any;
   title: string;
   className?: string;

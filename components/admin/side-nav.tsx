@@ -44,6 +44,12 @@ export const SideNav = ({
         icon: Layers,
       },
       {
+        href: `/admin/homepage-categories`,
+        label: "Homepage Categories",
+        active: pathname === `/admin/homepage-categories`,
+        icon: Layers,
+      },
+      {
         href: `/admin/subcategories`,
         label: "Subcategories",
         active: pathname === `/admin/subcategories`,

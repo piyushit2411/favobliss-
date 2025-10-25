@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { FaStar, FaCamera, FaTimes, FaVideo } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,15 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useOrder } from "@/hooks/use-order";
-import { getSubCategoryById } from "@/actions/get-subcategory"; // Adjust import path
-import { Order, OrderProduct } from "@prisma/client";
+import { getSubCategoryById } from "@/actions/get-subcategory";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 interface AddReviewFormProps {
   productId: string;
@@ -41,15 +48,18 @@ export const AddReviewForm = ({
   const userId = session?.user?.id;
   const userName = session?.user?.name || "Anonymous User";
   const isAdmin = session?.user?.email === "favoblis@gmail.com";
+  const [reviewDate, setReviewDate] = useState<Date | null>(
+    isAdmin ? null : new Date()
+  );
 
   const isVerifiedBuyer =
     isAuthenticated &&
     orders?.some(
       (order) =>
-        order.isPaid &&
+        order.isCompleted &&
         order.userId === userId &&
         order.orderProducts.some(
-          (product: any) => product.productId === productId
+          (product: any) => product?.variant?.productId === productId
         )
     );
 
@@ -198,6 +208,9 @@ export const AddReviewForm = ({
             videos: videoUrls,
             userId,
             categoryRatings,
+            customDate: reviewDate
+              ? reviewDate.toISOString()
+              : new Date().toISOString(),
           }),
         }
       );
@@ -232,42 +245,24 @@ export const AddReviewForm = ({
     5: "Excellent",
   };
 
-  // const fetchSubCategoryId = async () => {
-  //   try {
-  //     const productResponse = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`
-  //     );
-  //     if (productResponse.ok) {
-  //       const productData = await productResponse.json();
-  //       setSubCategoryId(productData.subCategoryId);
-  //     }
-  //   } catch (error) {
-  //     console.error("[FETCH_SUBCATEGORY_ID]", error);
-  //   }
-  // };
-
-  const fetchSubCategory = async () => {
-    if (subCategoryId) {
-      try {
-        const data = await getSubCategoryById(subCategoryId);
-        setCategoryRatings(
-          //@ts-ignores
-          data.reviewCategories.map((rc: { name: string }) => ({
-            categoryName: rc.name,
-            rating: 0,
-          }))
-        );
-      } catch (error) {
-        console.error("[FETCH_SUBCATEGORY]", error);
-      }
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchSubCategoryId();
-  // }, [productId]);
-
   useEffect(() => {
+    const fetchSubCategory = async () => {
+      if (subCategoryId) {
+        try {
+          const data = await getSubCategoryById(subCategoryId);
+          setCategoryRatings(
+            //@ts-ignore
+            data.reviewCategories.map((rc: { name: string }) => ({
+              categoryName: rc.name,
+              rating: 0,
+            }))
+          );
+        } catch (error) {
+          console.error("[FETCH_SUBCATEGORY]", error);
+        }
+      }
+    };
+
     fetchSubCategory();
   }, [subCategoryId]);
 
@@ -334,6 +329,33 @@ export const AddReviewForm = ({
                   className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   required
                 />
+              </div>
+            )}
+            {isAdmin && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Review Date *
+                </label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {reviewDate ? format(reviewDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      required
+                      selected={reviewDate || undefined}
+                      onSelect={(date) => setReviewDate(date ?? null)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             )}
 

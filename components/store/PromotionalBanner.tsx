@@ -1,25 +1,29 @@
 "use client";
 
-import { Category, LocationGroup, Product } from "@/types";
+import {
+  HomepageCategory,
+  HomePageCategoryProduct,
+  LocationGroup,
+} from "@/types";
 import React, { useEffect, useState } from "react";
-import { ProductList } from "./product-list";
-import { getProducts } from "@/actions/get-products";
 import { ProductSkeleton } from "./product-skeleton";
 import CategoryButtons from "./CategoryButtons";
 import PromtionalBannerProducts from "./PromotionalBannerProducts";
+import { getHomepageCategoryById } from "@/actions/get-homepage-categories";
 
 interface Props {
-  data: Product[];
   locationGroups: LocationGroup[];
-  categories: Category[];
+  categories: HomepageCategory[];
 }
 
 const PromotionalBanner = (props: Props) => {
-  const { data, locationGroups, categories } = props;
+  const { locationGroups, categories } = props;
   const [loading, setLoading] = useState(false);
 
-  const [category, setCategory] = useState<string | null>(null);
-  const [product, setProduct] = useState<Product[]>(data);
+  const [category, setCategory] = useState<string>("first");
+  const [product, setProduct] = useState<HomePageCategoryProduct[] | undefined>(
+    []
+  );
 
   const categoryChange = (id: string) => {
     setCategory(id);
@@ -28,10 +32,8 @@ const PromotionalBanner = (props: Props) => {
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
-      const { products: productData } = await getProducts({
-        subCategoryId: category || "",
-      });
-      setProduct(productData);
+      const productsData = await getHomepageCategoryById(category);
+      setProduct(productsData.products);
       setLoading(false);
     };
     getData();
@@ -73,14 +75,6 @@ const PromotionalBanner = (props: Props) => {
               <ProductSkeleton className="w-[160px] sm:w-[unset] flex-shrink-0 h-[270px]" />
             </div>
           ) : (
-            // <ProductList
-            //   title=""
-            //   data={product}
-            //   locationGroups={locationGroups}
-            //   isBannerProduct={true}
-            //   isSpaceTop={false}
-            //   className="md:min-w-[260px]"
-            // />
             <PromtionalBannerProducts
               products={product}
               locationGroups={locationGroups}

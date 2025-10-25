@@ -96,7 +96,7 @@ export const Footer = (props: Props) => {
               <h3 className="text-lg font-semibold text-white/90 pb-2 border-b border-white/10">
                 Company
               </h3>
-              <div className="grid gap-3 text-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-1 text-sm gap-3">
                 {[
                   "Site Map",
                   "Careers At Favobliss",
@@ -123,7 +123,7 @@ export const Footer = (props: Props) => {
               <h3 className="text-lg font-semibold text-white/90 pb-2 border-b border-white/10">
                 Products
               </h3>
-              <div className="grid gap-3 text-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-1 text-sm gap-3">
                 {[
                   "Televisions & Accessories",
                   "Home Appliances",

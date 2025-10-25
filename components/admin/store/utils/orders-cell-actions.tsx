@@ -28,6 +28,7 @@ export const OrderCellActions = ({ data }: OrderCellActionsProps) => {
     try {
       await axios.patch(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/orders/${data.id}`, {
         status: newStatus,
+        isPaid: newStatus === "DELIVERED" ? true : data.isPaid,
       });
       toast.success(`Order status updated to ${newStatus}`);
       router.refresh();

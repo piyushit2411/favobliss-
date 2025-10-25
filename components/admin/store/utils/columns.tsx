@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { OrderCellActions } from "./orders-cell-actions";
 import { LocationGroupCellActions } from "./location-group-cell-actions";
+import { HomepageCategoryCellActions } from "./homepage-category-cell-actions";
 
 export type Billboard = {
   id: string;
@@ -349,6 +350,64 @@ export const locationColumns: ColumnDef<LocationColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => <LocationCellActions data={row.original} />,
+  },
+];
+
+export type HomepageCategoryColumn = {
+  id: string;
+  name: string;
+  description: string;
+  productCount: number;
+  productNames: string[];
+  createdAt: string;
+};
+
+export const homepageCategoryColumns: ColumnDef<HomepageCategoryColumn>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "productCount",
+    header: "Products",
+    cell: ({ row }) => (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="link" className="p-0 h-auto font-normal">
+            {row.original.productCount}{" "}
+            {row.original.productCount === 1 ? "product" : "products"}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
+          <div className="space-y-2">
+            <h4 className="font-medium">Applicable Products</h4>
+            {row.original.productNames.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No products assigned
+              </p>
+            ) : (
+              <ul className="list-disc pl-5 text-sm">
+                {row.original.productNames.map((name, index) => (
+                  <li key={index}>{name}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
+    ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <HomepageCategoryCellActions data={row.original} />,
   },
 ];
 

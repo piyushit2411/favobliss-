@@ -8,6 +8,7 @@ import { Location, LocationGroup } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
+import Select from "react-select";
 
 import {
   Form,
@@ -17,28 +18,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Trash2, Check, ChevronsUpDown } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { Header } from "@/components/admin/store/utils/header";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/admin/modals/alert-modal";
 import { LocationGroupFormSchema } from "@/schemas/admin/location-group-form-schema";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
 
 interface LocationGroupFormProps {
   data: (LocationGroup & { locations: Location[] }) | null;
@@ -51,7 +38,6 @@ export const LocationGroupForm = ({
 }: LocationGroupFormProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [comboOpen, setComboOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
 
@@ -84,6 +70,110 @@ export const LocationGroupForm = ({
           expressDeliveryText: "",
         },
   });
+
+  const locationOptions = locations.map((location) => ({
+    value: location.id,
+    label: `${location.pincode} - ${location.city}`,
+  }));
+
+  const customStyles = {
+    control: (base: any, state: any) => ({
+      ...base,
+      minHeight: "40px",
+      borderRadius: "0.375rem",
+      borderColor: state.isFocused ? "hsl(var(--ring))" : "hsl(var(--input))",
+      backgroundColor: "hsl(var(--background))",
+      boxShadow: state.isFocused ? "0 0 0 1px hsl(var(--ring))" : "none",
+      "&:hover": {
+        borderColor: state.isFocused ? "hsl(var(--ring))" : "hsl(var(--input))",
+      },
+    }),
+    valueContainer: (base: any) => ({
+      ...base,
+      padding: "2px 12px",
+    }),
+    input: (base: any) => ({
+      ...base,
+      margin: 0,
+      padding: 0,
+      color: "hsl(var(--foreground))",
+    }),
+    placeholder: (base: any) => ({
+      ...base,
+      color: "hsl(var(--muted-foreground))",
+      fontSize: "0.875rem",
+    }),
+    menu: (base: any) => ({
+      ...base,
+      borderRadius: "0.375rem",
+      backgroundColor: "hsl(var(--popover))",
+      border: "1px solid hsl(var(--border))",
+      boxShadow:
+        "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      zIndex: 50,
+    }),
+    menuList: (base: any) => ({
+      ...base,
+      padding: "4px",
+      maxHeight: "300px",
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      borderRadius: "0.25rem",
+      backgroundColor: state.isSelected
+        ? "lightgray"
+        : state.isFocused
+        ? "hsl(var(--accent))"
+        : "transparent",
+      color: state.isSelected
+        ? "hsl(var(--accent-foreground))"
+        : "hsl(var(--popover-foreground))",
+      fontSize: "0.875rem",
+      padding: "8px 12px",
+      cursor: "pointer",
+      "&:active": {
+        backgroundColor: "hsl(var(--accent))",
+      },
+    }),
+    multiValue: (base: any) => ({
+      ...base,
+      backgroundColor: "hsl(var(--secondary))",
+      borderRadius: "0.25rem",
+    }),
+    multiValueLabel: (base: any) => ({
+      ...base,
+      color: "hsl(var(--secondary-foreground))",
+      fontSize: "0.875rem",
+      padding: "2px 6px",
+    }),
+    multiValueRemove: (base: any) => ({
+      ...base,
+      color: "hsl(var(--secondary-foreground))",
+      borderRadius: "0 0.25rem 0.25rem 0",
+      "&:hover": {
+        backgroundColor: "hsl(var(--destructive))",
+        color: "hsl(var(--destructive-foreground))",
+      },
+    }),
+    indicatorSeparator: (base: any) => ({
+      ...base,
+      backgroundColor: "hsl(var(--border))",
+    }),
+    dropdownIndicator: (base: any) => ({
+      ...base,
+      color: "hsl(var(--muted-foreground))",
+      "&:hover": {
+        color: "hsl(var(--foreground))",
+      },
+    }),
+    clearIndicator: (base: any) => ({
+      ...base,
+      color: "hsl(var(--muted-foreground))",
+      "&:hover": {
+        color: "hsl(var(--foreground))",
+      },
+    }),
+  };
 
   const onSubmit = async (values: z.infer<typeof LocationGroupFormSchema>) => {
     try {
@@ -176,70 +266,6 @@ export const LocationGroupForm = ({
             />
             <FormField
               control={form.control}
-              name="locationIds"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Locations</FormLabel>
-                  <FormControl>
-                    <Popover open={comboOpen} onOpenChange={setComboOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={comboOpen}
-                          className="w-full justify-between"
-                          disabled={loading}
-                        >
-                          {field.value && field.value.length > 0
-                            ? `${field.value.length} location(s) selected`
-                            : "Select locations"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0">
-                        <Command>
-                          <CommandInput placeholder="Search locations..." />
-                          <CommandList>
-                            <CommandEmpty>No locations found.</CommandEmpty>
-                            <CommandGroup>
-                              {locations.map((location) => (
-                                <CommandItem
-                                  key={location.id}
-                                  value={`${location.pincode} - ${location.city}`}
-                                  onSelect={() => {
-                                    const newValue = field.value?.includes(
-                                      location.id
-                                    )
-                                      ? field.value.filter(
-                                          (id) => id !== location.id
-                                        )
-                                      : [...(field.value || []), location.id];
-                                    field.onChange(newValue);
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      field.value?.includes(location.id)
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                  {location.pincode} - {location.city}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="deliveryDays"
               render={({ field }) => (
                 <FormItem>
@@ -252,6 +278,23 @@ export const LocationGroupForm = ({
                       placeholder="Enter delivery days"
                       min="1"
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="expressDeliveryText"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Express Delivery Text</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={loading}
+                      placeholder="Express Delivery Text"
                     />
                   </FormControl>
                   <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
@@ -302,24 +345,78 @@ export const LocationGroupForm = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="expressDeliveryText"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Express Delivery Text</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={loading}
-                      placeholder="Express Delivery Test"
-                    />
-                  </FormControl>
-                  <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
-                </FormItem>
-              )}
-            />
           </div>
+
+          <FormField
+            control={form.control}
+            name="locationIds"
+            render={({ field }) => (
+              <FormItem className="col-span-full">
+                <FormLabel>
+                  Locations ({field.value?.length || 0} selected)
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    isMulti
+                    options={locationOptions}
+                    value={locationOptions.filter((option) =>
+                      field.value?.includes(option.value)
+                    )}
+                    onChange={(selected) => {
+                      const newSelectedIds = selected.map(
+                        (option) => option.value
+                      );
+                      field.onChange(newSelectedIds);
+                    }}
+                    placeholder="Select locations..."
+                    isDisabled={loading}
+                    styles={customStyles}
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    controlShouldRenderValue={false}
+                  />
+                </FormControl>
+
+                {field.value && field.value.length > 0 && (
+                  <div className="mt-3 p-3 border rounded-md bg-muted/30 max-h-[300px] overflow-y-auto">
+                    <div className="flex flex-wrap gap-2">
+                      {field.value.map((id) => {
+                        const location = locations.find((loc) => loc.id === id);
+                        return (
+                          <div
+                            key={id}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-background border rounded-md text-sm hover:bg-accent transition-colors"
+                          >
+                            <span className="text-foreground">
+                              {location
+                                ? `${location.pincode} - ${location.city}`
+                                : "Unknown Location"}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                field.onChange(
+                                  field.value?.filter((locId) => locId !== id)
+                                );
+                              }}
+                              disabled={loading}
+                              className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />
+              </FormItem>
+            )}
+          />
+
           <Button type="submit" disabled={loading}>
             {actions}
           </Button>

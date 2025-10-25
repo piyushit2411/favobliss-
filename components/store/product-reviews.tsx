@@ -10,7 +10,6 @@ import { VerifiedBadgePremium } from "./verified-badge";
 import { Review } from "@/types";
 import { getReviews } from "@/actions/get-review";
 
-
 interface ProductReviewsProps {
   productId: string;
   avgRating: number | null;
@@ -116,6 +115,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
   const [subCategory, setSubCategory] = useState<any>(null);
 
   const isAdmin = session?.user?.email === "favoblis@gmail.com";
+  const [isAllMediaOpen, setIsAllMediaOpen] = useState(false);
 
   const fetchReviews = async () => {
     try {
@@ -126,8 +126,8 @@ export const ProductReviews = (props: ProductReviewsProps) => {
       // if (!response.ok) {
       //   throw new Error("Failed to fetch reviews");
       // }
-       const data = await getReviews(productId);
-     const sortedReviews = data.sort((a: Review, b: Review) => {
+      const data = await getReviews(productId);
+      const sortedReviews = data.sort((a: Review, b: Review) => {
         if (b.rating !== a.rating) {
           return b.rating - a.rating;
         }
@@ -366,12 +366,83 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                 </div>
               ))}
               {allReviewImages.length + allReviewVideos.length > 5 && (
-                <div className="flex-shrink-0 h-16 w-16 bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center">
-                  <span className="text-xs text-gray-600">
+                <div
+                  className="flex-shrink-0 h-16 w-16 bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+                  onClick={() => setIsAllMediaOpen(true)}
+                >
+                  <span className="text-xs text-gray-600 font-medium">
                     +{allReviewImages.length + allReviewVideos.length - 5}
                   </span>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {isAllMediaOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
+              <button
+                onClick={() => setIsAllMediaOpen(false)}
+                className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <div className="pt-12 pb-6 px-4">
+                <h3 className="text-lg font-semibold mb-4 text-center">
+                  All Photos & Videos
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {allReviewImages.map((image, index) => (
+                    <div
+                      key={`all-img-${index}`}
+                      className="relative group cursor-pointer"
+                      onClick={() => openImageModal(image.url)}
+                    >
+                      <img
+                        src={image.url}
+                        alt={`Customer photo ${index + 1}`}
+                        className="w-full h-48 object-cover rounded-lg border group-hover:border-blue-400 transition-colors"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg flex items-center justify-center">
+                        <span className="text-white opacity-0 group-hover:opacity-100 text-xs">
+                          View
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {allReviewVideos.map((video, index) => (
+                    <div
+                      key={`all-vid-${index}`}
+                      className="relative group cursor-pointer"
+                      onClick={() => openVideoModal(video.url)}
+                    >
+                      <video
+                        src={video.url}
+                        className="w-full h-48 object-cover rounded-lg border group-hover:border-blue-400 transition-colors"
+                        muted
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg flex items-center justify-center">
+                        <span className="text-white opacity-0 group-hover:opacity-100 text-xs">
+                          Play
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -499,7 +570,9 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                       <VerifiedBadgePremium />
                     </div>
                     <div className="text-sm text-gray-500">
-                      {new Date(review.createdAt).toLocaleDateString("en-US", {
+                      {new Date(
+                        review.customDate ? review.customDate : review.createdAt
+                      ).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
@@ -536,7 +609,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                     <div className="mt-4">
                       {(review.images.length > 0 ||
                         review.videos.length > 0) && (
-                        <div className="flex gap-2 mb-3 overflow-x-auto pb-1 max-w-[250px]">
+                        <div className="flex gap-2 mb-3 overflow-x-auto pb-1 max-w-[60vw] md:max-w-[70vw]">
                           {review.images.map((image, index) => (
                             <img
                               key={`image-${index}`}

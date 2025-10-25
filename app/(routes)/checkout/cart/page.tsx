@@ -56,7 +56,7 @@ const CartPage = () => {
               </div>
               <div className="flex flex-col gap-y-8 w-full lg:col-span-5 lg:mt-0 mt-16">
                 <Summary />
-                <Hero />
+                {/* <Hero /> */}
               </div>
             </div>
           </div>

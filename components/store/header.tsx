@@ -258,111 +258,111 @@ export default function DynamicHeader({
     setSearchQuery("");
   };
 
-  const transformCategoriesToMenuCategories = (
-    apiCategories: any[]
-  ): MenuCategory[] => {
-    return apiCategories?.map((category) => {
-      const menuCategory: MenuCategory = {
-        name: category.name,
-        items: [],
-        subItems: undefined,
-        link: `/category/${category.id}?page=1`,
-        slug: `/category/${category.slug}?page=1`,
-      };
+  // const transformCategoriesToMenuCategories = (
+  //   apiCategories: any[]
+  // ): MenuCategory[] => {
+  //   return apiCategories?.map((category) => {
+  //     const menuCategory: MenuCategory = {
+  //       name: category.name,
+  //       items: [],
+  //       subItems: undefined,
+  //       link: `/category/${category.id}?page=1`,
+  //       slug: `/category/${category.slug}?page=1`,
+  //     };
 
-      if (category.subCategories && category.subCategories.length > 0) {
-        if (category.name === "HOME APPLIANCES") {
-          menuCategory.items = category.subCategories.map((subCat: any) => ({
-            label: subCat.name,
-            href: `/category/${category.slug}?sub=${subCat.slug}?page=1`,
-            count: subCat.childSubCategories?.length || 0,
-          }));
+  //     if (category.subCategories && category.subCategories.length > 0) {
+  //       if (category.name === "HOME APPLIANCES") {
+  //         menuCategory.items = category.subCategories.map((subCat: any) => ({
+  //           label: subCat.name,
+  //           href: `/category/${category.slug}?sub=${subCat.slug}?page=1`,
+  //           count: subCat.childSubCategories?.length || 0,
+  //         }));
 
-          const subItemsObj: { [key: string]: MenuItem[] } = {};
-          category.subCategories.forEach((subCat: any) => {
-            if (
-              subCat.childSubCategories &&
-              subCat.childSubCategories.length > 0
-            ) {
-              subItemsObj[subCat.name] = subCat.childSubCategories.map(
-                (childSubCat: any) => ({
-                  label: childSubCat.name,
-                  href: `/category/${category.slug}?sub=${subCat.slug}&childsub=${childSubCat.slug}?page=1`,
-                  count: 0,
-                })
-              );
-            }
-          });
-          menuCategory.subItems = subItemsObj;
-        } else {
-          menuCategory.items = category.subCategories.map((subCat: any) => ({
-            label: subCat.name,
-            href: `/category/${category.slug}?sub=${subCat.slug}?page=1`,
-            count: subCat.childSubCategories?.length || 0,
-          }));
+  //         const subItemsObj: { [key: string]: MenuItem[] } = {};
+  //         category.subCategories.forEach((subCat: any) => {
+  //           if (
+  //             subCat.childSubCategories &&
+  //             subCat.childSubCategories.length > 0
+  //           ) {
+  //             subItemsObj[subCat.name] = subCat.childSubCategories.map(
+  //               (childSubCat: any) => ({
+  //                 label: childSubCat.name,
+  //                 href: `/category/${category.slug}?sub=${subCat.slug}&childsub=${childSubCat.slug}?page=1`,
+  //                 count: 0,
+  //               })
+  //             );
+  //           }
+  //         });
+  //         menuCategory.subItems = subItemsObj;
+  //       } else {
+  //         menuCategory.items = category.subCategories.map((subCat: any) => ({
+  //           label: subCat.name,
+  //           href: `/category/${category.slug}?sub=${subCat.slug}?page=1`,
+  //           count: subCat.childSubCategories?.length || 0,
+  //         }));
 
-          if (
-            category.subCategories.some(
-              (subCat: any) => subCat.childSubCategories?.length > 0
-            )
-          ) {
-            const allChildSubCategories: MenuItem[] = [];
-            category.subCategories.forEach((subCat: any) => {
-              if (
-                subCat.childSubCategories &&
-                subCat.childSubCategories.length > 0
-              ) {
-                subCat.childSubCategories.forEach((childSubCat: any) => {
-                  allChildSubCategories.push({
-                    label: childSubCat.name,
-                    href: `/category/${category.slug}?sub=${subCat.slug}&childsub=${childSubCat.slug}?page=1`,
-                    count: 0,
-                  });
-                });
-              }
-            });
-            if (allChildSubCategories.length > 0) {
-              menuCategory.subItems = allChildSubCategories;
-            }
-          }
-        }
-      } else {
-        menuCategory.items = [
-          {
-            label: category.name,
-            href: `/category/${category.slug}`,
-            count: 0,
-          },
-        ];
-      }
+  //         if (
+  //           category.subCategories.some(
+  //             (subCat: any) => subCat.childSubCategories?.length > 0
+  //           )
+  //         ) {
+  //           const allChildSubCategories: MenuItem[] = [];
+  //           category.subCategories.forEach((subCat: any) => {
+  //             if (
+  //               subCat.childSubCategories &&
+  //               subCat.childSubCategories.length > 0
+  //             ) {
+  //               subCat.childSubCategories.forEach((childSubCat: any) => {
+  //                 allChildSubCategories.push({
+  //                   label: childSubCat.name,
+  //                   href: `/category/${category.slug}?sub=${subCat.slug}&childsub=${childSubCat.slug}?page=1`,
+  //                   count: 0,
+  //                 });
+  //               });
+  //             }
+  //           });
+  //           if (allChildSubCategories.length > 0) {
+  //             menuCategory.subItems = allChildSubCategories;
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       menuCategory.items = [
+  //         {
+  //           label: category.name,
+  //           href: `/category/${category.slug}`,
+  //           count: 0,
+  //         },
+  //       ];
+  //     }
 
-      return menuCategory;
-    });
-  };
+  //     return menuCategory;
+  //   });
+  // };
 
-  const menuCategories = transformCategoriesToMenuCategories(categories);
+  // const menuCategories = transformCategoriesToMenuCategories(categories);
 
-  // if (isMobile) {
-  //   return null;
+  // // if (isMobile) {
+  // //   return null;
+  // // }
+
+  // const getRightAlignedCategories = (categories: MenuCategory[]) => {
+  //   if (categories.length >= 2) {
+  //     return categories.slice(-2).map((cat) => cat.name);
+  //   }
+  //   return [];
+  // };
+
+  // const rightAlignedCategories = getRightAlignedCategories(menuCategories);
+
+  // function doubleMenuCategory(category: string): boolean {
+  //   const categories = [
+  //     "Electronics",
+  //     "Kitchen Appliances",
+  //     "Computer & Printer",
+  //   ];
+  //   return categories.includes(category);
   // }
-
-  const getRightAlignedCategories = (categories: MenuCategory[]) => {
-    if (categories.length >= 2) {
-      return categories.slice(-2).map((cat) => cat.name);
-    }
-    return [];
-  };
-
-  const rightAlignedCategories = getRightAlignedCategories(menuCategories);
-
-  function doubleMenuCategory(category: string): boolean {
-    const categories = [
-      "Electronics",
-      "Kitchen Appliances",
-      "Computer & Printer",
-    ];
-    return categories.includes(category);
-  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
@@ -374,59 +374,59 @@ export default function DynamicHeader({
     }
   };
 
-  const renderHomeAppliancesMenu = (category: MenuCategory, close: any) => {
-    return (
-      <div className="py-2">
-        {category.items.map((item) => (
-          <div key={item.label} className="relative group w-max">
-            <>
-              <div className="flex items-center justify-between hover:bg-gray-50 px-4 py-2 cursor-pointer w-52">
-                <div className="flex gap-2 items-center">
-                  <Link
-                    href={item.href}
-                    className="text-xs text-black flex-1"
-                    onClick={() => close()}
-                  >
-                    {item.label}
-                  </Link>
-                  <span className="bg-gray-500 text-white text-xs rounded-full text-center p-[2px] min-w-5 min-h-5 text-[10px] border border-transparent">
-                    {item.count}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-400 text-lg">
-                    {<MdArrowRight />}
-                  </span>
-                </div>
-              </div>
+  // const renderHomeAppliancesMenu = (category: MenuCategory, close: any) => {
+  //   return (
+  //     <div className="py-2">
+  //       {category.items.map((item) => (
+  //         <div key={item.label} className="relative group w-max">
+  //           <>
+  //             <div className="flex items-center justify-between hover:bg-gray-50 px-4 py-2 cursor-pointer w-52">
+  //               <div className="flex gap-2 items-center">
+  //                 <Link
+  //                   href={item.href}
+  //                   className="text-xs text-black flex-1"
+  //                   onClick={() => close()}
+  //                 >
+  //                   {item.label}
+  //                 </Link>
+  //                 <span className="bg-gray-500 text-white text-xs rounded-full text-center p-[2px] min-w-5 min-h-5 text-[10px] border border-transparent">
+  //                   {item.count}
+  //                 </span>
+  //               </div>
+  //               <div className="flex items-center space-x-2">
+  //                 <span className="text-gray-400 text-lg">
+  //                   {<MdArrowRight />}
+  //                 </span>
+  //               </div>
+  //             </div>
 
-              <div className="absolute left-full top-0 ml-1 w-max bg-white border border-gray-200 rounded-md shadow-lg z-30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div className="py-2">
-                  {category.subItems &&
-                    typeof category.subItems === "object" &&
-                    !Array.isArray(category.subItems) &&
-                    category.subItems[item.label] &&
-                    category.subItems[item.label].map((subItem: any) => (
-                      <Link
-                        key={subItem.label}
-                        href={subItem.href}
-                        className="flex items-center gap-2 hover:bg-gray-50 px-4 py-2 text-xs text-black hover:text-blue-800"
-                        onClick={() => close()}
-                      >
-                        <span>{subItem.label}</span>
-                        <span className="bg-gray-500 text-white text-xs rounded-full text-center p-[2px] min-w-5 min-h-5 text-[10px] border border-transparent">
-                          {subItem.count}
-                        </span>
-                      </Link>
-                    ))}
-                </div>
-              </div>
-            </>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  //             <div className="absolute left-full top-0 ml-1 w-max bg-white border border-gray-200 rounded-md shadow-lg z-30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+  //               <div className="py-2">
+  //                 {category.subItems &&
+  //                   typeof category.subItems === "object" &&
+  //                   !Array.isArray(category.subItems) &&
+  //                   category.subItems[item.label] &&
+  //                   category.subItems[item.label].map((subItem: any) => (
+  //                     <Link
+  //                       key={subItem.label}
+  //                       href={subItem.href}
+  //                       className="flex items-center gap-2 hover:bg-gray-50 px-4 py-2 text-xs text-black hover:text-blue-800"
+  //                       onClick={() => close()}
+  //                     >
+  //                       <span>{subItem.label}</span>
+  //                       <span className="bg-gray-500 text-white text-xs rounded-full text-center p-[2px] min-w-5 min-h-5 text-[10px] border border-transparent">
+  //                         {subItem.count}
+  //                       </span>
+  //                     </Link>
+  //                   ))}
+  //               </div>
+  //             </div>
+  //           </>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="bg-white hidden md:block">
