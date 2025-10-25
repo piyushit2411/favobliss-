@@ -16,6 +16,15 @@ import Breadcrumb from "@/components/store/Breadcrumbs";
 import { getLocationGroups } from "@/actions/get-location-group";
 import { getBrands } from "@/actions/get-brands";
 
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const brands = await getBrands(); 
+  return brands.map((brand) => ({
+    slug: brand.slug,
+  }));
+}
+
 async function withRetry<T>(
   fn: () => Promise<T>,
   retries = 3,
