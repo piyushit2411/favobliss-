@@ -336,6 +336,7 @@ export interface Review {
   userId: string;
   categoryRatings: { categoryName: string; rating: number }[];
   customDate?: string | null;
+  title: string;
 }
 
 export interface HomePageCategoryProduct {

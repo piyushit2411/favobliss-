@@ -639,6 +639,11 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                           ))}
                         </div>
                       )}
+                      {review.title && (
+                        <p className="text-black leading-relaxed font-bold text-lg mb-1">
+                          {review?.title}
+                        </p>
+                      )}
                       <p className="text-gray-700 leading-relaxed">
                         {review.text}
                       </p>

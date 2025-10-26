@@ -48,6 +48,7 @@ export async function POST(
       userId,
       categoryRatings = [],
       customDate,
+      title
     } = validatedData.data;
 
     if (!params.productId) {
@@ -99,6 +100,7 @@ export async function POST(
         userId,
         rating,
         text,
+        title,
         customDate: customDate ? new Date(customDate) : null,
         images: {
           create: images.map((url) => ({ url })),

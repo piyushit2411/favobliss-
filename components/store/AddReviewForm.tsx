@@ -34,6 +34,7 @@ export const AddReviewForm = ({
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [customUserName, setCustomUserName] = useState("");
@@ -208,6 +209,7 @@ export const AddReviewForm = ({
             videos: videoUrls,
             userId,
             categoryRatings,
+            title,
             customDate: reviewDate
               ? reviewDate.toISOString()
               : new Date().toISOString(),
@@ -434,6 +436,19 @@ export const AddReviewForm = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Title *
+              </label>
+              <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter title for the review"
+                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Your Review *
               </label>
               <Textarea
@@ -554,7 +569,7 @@ export const AddReviewForm = ({
               )}
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-4 flex-col md:flex-row">
               <Button
                 type="submit"
                 disabled={

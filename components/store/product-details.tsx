@@ -1206,8 +1206,9 @@ export const ProductDetails = (props: ProductDetailsProps) => {
               </div>
             )}
           </div>
-
-          <ProductFeatures data={productData} />
+          {productData.product.enabledFeatures && (
+            <ProductFeatures data={productData} />
+          )}
 
           {product.expressDelivery &&
             currentLocationGroupData?.isExpressDelivery && (

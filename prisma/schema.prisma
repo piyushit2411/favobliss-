@@ -439,6 +439,7 @@ model Review {
   user            User                   @relation("UserToReview", fields: [userId], references: [id], onDelete: Cascade)
   userName        String
   rating          Int
+  title           String?
   text            String
   images          ReviewImage[]          @relation("ReviewToReviewImage")
   videos          ReviewVideo[]          @relation("ReviewToReviewVideo")
