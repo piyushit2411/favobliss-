@@ -4,6 +4,7 @@ import { LocationGroup, Product } from "@/types";
 import { NoResults } from "./no-results";
 import { ProductCard } from "./product-card";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface ProductListProps {
   title: string;
@@ -26,12 +27,16 @@ export const ProductList = ({
   link = "/latest-launches?page=1",
   className,
 }: ProductListProps) => {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  const userName = isAuthenticated ? session?.user?.name || "User" : "User";
+
   return (
     <div className="space-y-2 md:space-y-8">
       {title.length > 0 && (
         <div className="flex items-center justify-between">
           <h3 className="text-xl md:text-3xl lg:text-4xl font-bold mb-0 md:mb-5">
-            {title}
+            {title} {title === "Recently Viewed" && `by ${userName}`}
           </h3>
           {showViewAll && (
             <Link href={link} className="text-gray-500 text-sm hover:underline">
