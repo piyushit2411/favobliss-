@@ -86,7 +86,7 @@ export type BlogColumn = {
   title: string;
   author:string;
   published:boolean;
-  views: number;
+  // views: number;
   createdAt: string;
 };
 
@@ -103,10 +103,10 @@ export const blogColumns: ColumnDef<BlogColumn>[] = [
     accessorKey: "published",
     header: "Published",
   },
-  {
-    accessorKey: "views",
-    header: "Views",
-  },
+  // {
+  //   accessorKey: "views",
+  //   header: "Views",
+  // },
   {
     accessorKey: "createdAt",
     header: "Created At",

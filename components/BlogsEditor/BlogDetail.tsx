@@ -144,7 +144,7 @@ export function BlogDetail({ blog }: BlogDetailProps) {
                 </span>
               </div>
 
-              {blog.views !== undefined && (
+              {/* {blog.views !== undefined && (
                 <div
                   className={`flex items-center gap-2 ${
                     blog.banner ? "text-white/90" : "text-gray-600"
@@ -153,7 +153,7 @@ export function BlogDetail({ blog }: BlogDetailProps) {
                   <Eye className="w-4 h-4" />
                   <span>{blog.views.toLocaleString()} views</span>
                 </div>
-              )}
+              )} */}
 
               {blog.createdAt !== blog.updatedAt && (
                 <div

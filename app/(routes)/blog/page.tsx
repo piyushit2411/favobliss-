@@ -193,12 +193,12 @@ export default function BlogList() {
                           )}
                         </span>
                       </div>
-                      {blog.views !== undefined && (
+                      {/* {blog.views !== undefined && (
                         <div className="flex items-center gap-1.5">
                           <Eye className="w-4 h-4" />
                           <span>{blog.views}</span>
                         </div>
-                      )}
+                      )} */}
                     </div>
 
                     {blog.postedBy && (

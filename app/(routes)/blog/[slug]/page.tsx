@@ -60,17 +60,17 @@ export default async function BlogPage({
   try {
     blog = await getBlogBySlug(params.slug);
 
-    const newViews = (blog.views || 0) + 1;
-    try {
-      await fetch(`${URL}/api/blogs/${blog.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ views: newViews }),
-      });
-      blog.views = newViews;
-    } catch (error) {
-      console.error("Failed to update views:", error);
-    }
+    // const newViews = (blog.views || 0) + 1;
+    // try {
+    //   await fetch(`${URL}/api/blogs/${blog.id}`, {
+    //     method: "PATCH",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ views: newViews }),
+    //   });
+    //   blog.views = newViews;
+    // } catch (error) {
+    //   console.error("Failed to update views:", error);
+    // }
   } catch (error) {
     console.error(error);
     notFound();

@@ -24,7 +24,7 @@ const BlogPage = async ({ params }: BlogPageProps) => {
     title: item.title,
     author: item.postedBy || "Admin Favobliss",
     published: item.published,
-    views: item.views || 0,
+    // views: item.views || 0,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
   }));
 
