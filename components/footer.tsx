@@ -20,6 +20,18 @@ export const Footer = (props: Props) => {
   const { categories } = props;
   const router = useRouter();
 
+  const companyLinks = [
+    { name: "Site Map", link: "#" },
+    { name: "Blogs", link: "/blog" },
+    { name: "Careers At Favobliss", link: "#" },
+    { name: "Terms Of Use", link: "#" },
+    { name: "Disclaimer", link: "#" },
+    { name: "Privacy Policy", link: "#" },
+    { name: "Unboxed", link: "#" },
+    { name: "Gift Card", link: "#" },
+    { name: "Favobliss E-Star", link: "#" },
+  ];
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -97,22 +109,13 @@ export const Footer = (props: Props) => {
                 Company
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-1 text-sm gap-3">
-                {[
-                  "Site Map",
-                  "Careers At Favobliss",
-                  "Terms Of Use",
-                  "Disclaimer",
-                  "Privacy Policy",
-                  "Unboxed",
-                  "Gift Card",
-                  "Favobliss E-Star",
-                ].map((link, index) => (
+                {companyLinks.map((comp, index) => (
                   <a
                     key={index}
-                    href="#"
+                    href={comp.link}
                     className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-200 cursor-pointer"
                   >
-                    {link}
+                    {comp.name}
                   </a>
                 ))}
               </div>
