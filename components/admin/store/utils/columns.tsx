@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { OrderCellActions } from "./orders-cell-actions";
 import { LocationGroupCellActions } from "./location-group-cell-actions";
 import { HomepageCategoryCellActions } from "./homepage-category-cell-actions";
+import { BlogCellActions } from "./blog-cell-actions";
 
 export type Billboard = {
   id: string;
@@ -77,6 +78,42 @@ export const reviewColumns: ColumnDef<ReviewColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => <ReviewCellActions data={row.original} />,
+  },
+];
+
+export type BlogColumn = {
+  id: string;
+  title: string;
+  author:string;
+  published:boolean;
+  views: number;
+  createdAt: string;
+};
+
+export const blogColumns: ColumnDef<BlogColumn>[] = [
+  {
+    accessorKey: "title",
+    header: "Title",
+  },
+  {
+    accessorKey: "author",
+    header: "Author",
+  },
+  {
+    accessorKey: "published",
+    header: "Published",
+  },
+  {
+    accessorKey: "views",
+    header: "Views",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <BlogCellActions data={row.original} />,
   },
 ];
 

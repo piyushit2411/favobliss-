@@ -163,7 +163,7 @@ export const AddReviewForm = ({
         const formData = new FormData();
         images.forEach((image) => formData.append("images", image));
 
-        const uploadResponse = await fetch("/api/v1/image-upload", {
+        const uploadResponse = await fetch("/api/upload-image", {
           method: "POST",
           body: formData,
         });
@@ -180,7 +180,7 @@ export const AddReviewForm = ({
         const formData = new FormData();
         videos.forEach((video) => formData.append("videos", video));
 
-        const uploadResponse = await fetch("/api/v1/video-upload", {
+        const uploadResponse = await fetch("/api/upload-video", {
           method: "POST",
           body: formData,
         });

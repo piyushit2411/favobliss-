@@ -1,3 +1,5 @@
+import { Editor } from "@tiptap/react";
+
 export interface Billboard {
   id: string;
   label: string;
@@ -106,6 +108,22 @@ export interface Product {
   coupons: Coupon[];
 }
 
+export interface Blog {
+  id: string;
+  title: string;
+  banner: string;
+  slug: string;
+  views: number;
+  postedBy?: string;
+  content: any;
+  createdAt: string;
+  updatedAt: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string[];
+  openGraphImage?: string;
+}
+
 export interface Coupon {
   id: string;
   couponId: string;
@@ -120,6 +138,17 @@ export interface Coupon {
     usagePerUser: number;
     usedCount: number;
   };
+}
+
+export interface DocumentContent {
+  type: string;
+  content: Array<Record<string, any>>;
+}
+
+export interface StoredDocument {
+  id: string;
+  content: DocumentContent;
+  name: string;
 }
 
 export interface Brand {
@@ -355,4 +384,16 @@ export interface HomepageCategory {
   createdAt: string;
   updatedAt: string;
   products: HomePageCategoryProduct[];
+}
+
+export interface NodeItems {
+  command?: (editor: Editor) => void;
+  label: string;
+  icon?: any;
+  isActive?: (editor: Editor) => boolean;
+  style?: React.CSSProperties;
+  isColorPicker?: boolean;
+  isFloatingMenu?: boolean;
+  dropdownItems?: NodeItems[];
+  isDropdown?: boolean;
 }

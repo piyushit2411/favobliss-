@@ -121,12 +121,12 @@ export const SideNav = ({
         active: pathname === `/admin/location-group`,
         icon: Group,
       },
-      // {
-      //   href: `/admin/billboards`,
-      //   label: "Billboards",
-      //   active: pathname === `/admin/billboards`,
-      //   icon: Monitor,
-      // },
+      {
+        href: `/admin/blog`,
+        label: "Blog",
+        active: pathname === `/admin/blog`,
+        icon: Monitor,
+      },
       // {
       //   href: `/admin/settings`,
       //   label: "Settings",

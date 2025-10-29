@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { Navbar } from "@/components/admin/navbar";
 import { ModalProvider } from "@/providers/admin/modal-provider";
@@ -34,16 +33,6 @@ const DashboardLayoutPage = async ({
     redirect("/");
   }
 
-  // const store = await db.store.findFirst({
-  //   where: {
-  //     id: params.storeId,
-  //     userId,
-  //   },
-  // });
-
-  // if (!store) {
-  //   redirect("/");
-  // }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -55,7 +44,6 @@ const DashboardLayoutPage = async ({
       >
         <ModalProvider />
         <Navbar />
-        {/* Main content with proper spacing for sidebar */}
         <div className="md:pl-64 pt-16 md:pt-0">
           <main className="p-6 pt-0">{children}</main>
         </div>

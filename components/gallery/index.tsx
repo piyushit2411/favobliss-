@@ -63,7 +63,7 @@ export const Gallery = ({
 
   if (!images.length) {
     return (
-      <div className="w-full aspect-[3/4] relative bg-gray-50">
+      <div className="w-full aspect-[3/4] relative bg-white">
         <Image
           src="/placeholder-image.jpg"
           alt="Placeholder Image"
@@ -179,7 +179,7 @@ export const Gallery = ({
           <TabsContent
             key={media.id}
             value={media.id}
-            className="relative overflow-hidden bg-transparent h-auto min-h-[500px] max-h-[600px] rounded-2xl"
+            className="relative overflow-hidden bg-white h-auto min-h-[500px] max-h-[600px] rounded-2xl"
           >
             {media.mediaType === "IMAGE" ? (
               <>
@@ -202,7 +202,7 @@ export const Gallery = ({
                 </div>
               </>
             ) : (
-              <div className="relative w-full h-full flex items-center justify-center bg-transparent min-h-[500px]">
+              <div className="relative w-full h-full flex items-center justify-center bg-white min-h-[500px]">
                 <video
                   src={media.url}
                   className="object-contain max-h-full w-full h-auto rounded-2xl"

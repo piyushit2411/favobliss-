@@ -20,6 +20,7 @@ import {
   List,
   Clipboard,
   Ticket,
+  Group
 } from "lucide-react";
 
 export const SubNav = ({
@@ -114,6 +115,18 @@ export const SubNav = ({
         label: "Locations",
         active: pathname === `/admin/location`,
         icon: MapPin,
+      },
+      {
+        href: `/admin/location-group`,
+        label: "Location Groups",
+        active: pathname === `/admin/location-group`,
+        icon: Group,
+      },
+      {
+        href: `/admin/blog`,
+        label: "Blog",
+        active: pathname === `/admin/blog`,
+        icon: Monitor,
       },
       // {
       //   href: `/admin/billboards`,
