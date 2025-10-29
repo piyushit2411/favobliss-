@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash2, FileText } from "lucide-react";
 import { AlertModal } from "@/components/admin/modals/alert-modal";
 import { copyToClipboard } from "@/lib/utils";
 import { BlogColumn } from "./columns";
@@ -79,6 +79,12 @@ export const BlogCellActions = ({ data }: BlogCellActionsProps) => {
           >
             <Edit className="h-4 w-4 mr-4" />
             Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/blog/${data.id}/content`)}
+          >
+            <FileText className="h-4 w-4 mr-4" />
+            Edit Content
           </DropdownMenuItem>
           <DropdownMenuItem disabled={loading} onClick={() => setOpen(true)}>
             <Trash2 className="h-4 w-4 mr-4" />

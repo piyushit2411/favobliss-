@@ -132,65 +132,85 @@ export const AddReviewForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!isAuthenticated) {
       toast.error("Please log in to submit a review.");
       return;
     }
-
     if (!canSubmitReview) {
       toast.error("You must purchase this product to submit a review.");
       return;
     }
-
     if (rating === 0) {
       toast.error("Please select an overall rating.");
       return;
     }
-
     if (isAdmin && !customUserName.trim()) {
       toast.error("Please enter a username for the review.");
       return;
     }
-
     setIsLoading(true);
-
     try {
       let imageUrls: string[] = [];
       let videoUrls: string[] = [];
 
       if (images.length > 0) {
-        const formData = new FormData();
-        images.forEach((image) => formData.append("images", image));
-
-        const uploadResponse = await fetch("/api/upload-image", {
-          method: "POST",
-          body: formData,
+        const imageUploadPromises = images.map(async (image) => {
+          const formData = new FormData();
+          formData.append("file", image);
+          const uploadResponse = await fetch("/api/upload-image", {
+            method: "POST",
+            body: formData,
+          });
+          if (!uploadResponse.ok) {
+            throw new Error(`Failed to upload image: ${image.name}`);
+          }
+          const uploadData = await uploadResponse.json();
+          return uploadData.url; 
         });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload images");
+        const uploadedImageUrls = await Promise.allSettled(imageUploadPromises);
+        imageUrls = uploadedImageUrls
+          .filter(
+            (result): result is PromiseFulfilledResult<string> =>
+              result.status === "fulfilled"
+          )
+          .map((result) => result.value);
+        const failures = uploadedImageUrls.filter(
+          (result) => result.status === "rejected"
+        );
+        if (failures.length > 0) {
+          console.warn("Some images failed to upload:", failures);
+          toast.error("Some images failed to upload")
         }
-
-        const uploadData = await uploadResponse.json();
-        imageUrls = uploadData.imageUrls;
       }
 
       if (videos.length > 0) {
-        const formData = new FormData();
-        videos.forEach((video) => formData.append("videos", video));
-
-        const uploadResponse = await fetch("/api/upload-video", {
-          method: "POST",
-          body: formData,
+        const videoUploadPromises = videos.map(async (video) => {
+          const formData = new FormData();
+          formData.append("file", video);
+          const uploadResponse = await fetch("/api/upload-video", {
+            method: "POST",
+            body: formData,
+          });
+          if (!uploadResponse.ok) {
+            throw new Error(`Failed to upload video: ${video.name}`);
+          }
+          const uploadData = await uploadResponse.json();
+          return uploadData.url; 
         });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload videos");
+        const uploadedVideoUrls = await Promise.allSettled(videoUploadPromises);
+        videoUrls = uploadedVideoUrls
+          .filter(
+            (result): result is PromiseFulfilledResult<string> =>
+              result.status === "fulfilled"
+          )
+          .map((result) => result.value);
+        const failures = uploadedVideoUrls.filter(
+          (result) => result.status === "rejected"
+        );
+        if (failures.length > 0) {
+          console.warn("Some videos failed to upload:", failures);
+          toast.error("Some videos are failed to upload");
         }
-
-        const uploadData = await uploadResponse.json();
-        videoUrls = uploadData.videoUrls;
       }
 
       const response = await fetch(
@@ -205,7 +225,7 @@ export const AddReviewForm = ({
             userName: isAdmin ? customUserName : userName,
             rating,
             text,
-            images: imageUrls,
+            images: imageUrls, 
             videos: videoUrls,
             userId,
             categoryRatings,
@@ -216,13 +236,10 @@ export const AddReviewForm = ({
           }),
         }
       );
-
       if (!response.ok) {
         throw new Error("Failed to submit review");
       }
-
       toast.success("Review submitted successfully!");
-
       setRating(0);
       setText("");
       setImages([]);
