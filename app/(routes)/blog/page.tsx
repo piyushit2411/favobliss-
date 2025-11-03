@@ -143,13 +143,12 @@ export default function BlogList() {
                   className="group bg-white rounded-xl overflow-hidden border-2 border-gray-100 hover:border-[#ef911f] transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
                   onClick={() => router.push(`/blog/${blog.slug}`)}
                 >
-                  {/* Banner Image */}
                   <div className="relative h-52 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                     {blog.banner ? (
                       <img
                         src={blog.banner}
                         alt={blog.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-fill group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
