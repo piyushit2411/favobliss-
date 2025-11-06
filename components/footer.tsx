@@ -22,7 +22,7 @@ export const Footer = (props: Props) => {
 
   const companyLinks = [
     { name: "Site Map", link: "#" },
-    { name: "Blogs", link: "/blog" },
+    { name: "Blogs", link: "/blog?page=1" },
     { name: "Careers At Favobliss", link: "#" },
     { name: "Terms Of Use", link: "#" },
     { name: "Disclaimer", link: "#" },

@@ -122,6 +122,7 @@ export interface Blog {
   metaDescription?: string;
   metaKeywords?: string[];
   openGraphImage?: string;
+  published:boolean;
 }
 
 export interface Coupon {
@@ -149,6 +150,13 @@ export interface StoredDocument {
   id: string;
   content: DocumentContent;
   name: string;
+}
+
+export interface PaginatedBlogs {
+  blogs: Blog[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface Brand {
