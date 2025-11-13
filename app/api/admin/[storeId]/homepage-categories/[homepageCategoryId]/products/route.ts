@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const allowedOrigins = [
   process.env.NEXT_PUBLIC_FRONTEND_URL,
   "http://localhost:3000",
-  "https://favobliss.vercel.app",
+  "https://www.electrax.in",
 ].filter(Boolean);
 
 export async function PATCH(
@@ -198,7 +198,9 @@ export async function POST(
     }
 
     if (!params.homepageCategoryId) {
-      return new NextResponse("Homepage Category Id is required", { status: 400 });
+      return new NextResponse("Homepage Category Id is required", {
+        status: 400,
+      });
     }
 
     const storeById = await db.store.findUnique({
@@ -208,7 +210,9 @@ export async function POST(
     });
 
     if (!storeById) {
-      return new NextResponse("Store does not exist or unauthorized", { status: 404 });
+      return new NextResponse("Store does not exist or unauthorized", {
+        status: 404,
+      });
     }
 
     const homepageCategory = await db.homepageCategory.findUnique({
@@ -230,7 +234,10 @@ export async function POST(
     });
 
     if (validProducts.length !== productIds.length) {
-      return new NextResponse("One or more products are invalid or do not belong to the store", { status: 400 });
+      return new NextResponse(
+        "One or more products are invalid or do not belong to the store",
+        { status: 400 }
+      );
     }
 
     const existingAssociations = await db.homepageCategoryProduct.findMany({
@@ -242,10 +249,14 @@ export async function POST(
       },
     });
 
-    const existingProductIds = new Set(existingAssociations.map((assoc) => assoc.productId));
+    const existingProductIds = new Set(
+      existingAssociations.map((assoc) => assoc.productId)
+    );
     const newProductIds = new Set(productIds);
 
-    const productsToAdd = productIds.filter((id) => !existingProductIds.has(id));
+    const productsToAdd = productIds.filter(
+      (id) => !existingProductIds.has(id)
+    );
 
     const productsToRemove = existingAssociations
       .map((assoc) => assoc.productId)

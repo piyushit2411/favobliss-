@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const allowedOrigins = [
   process.env.NEXT_PUBLIC_FRONTEND_URL,
   "http://localhost:3000",
-  "https://favobliss.vercel.app",
+  "https://www.electrax.in",
 ].filter(Boolean);
 
 export async function GET(
@@ -32,7 +32,6 @@ export async function GET(
   }
 
   try {
-
     if (!params.storeId) {
       return new NextResponse("Store ID is required", { status: 400, headers });
     }

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const allowedOrigins = [
   process.env.NEXT_PUBLIC_FRONTEND_URL,
   "http://localhost:3000",
-  "https://favobliss.vercel.app",
+  "https://www.electrax.in",
 ].filter(Boolean);
 
 export async function PATCH(
@@ -14,12 +14,7 @@ export async function PATCH(
 ) {
   try {
     const session = await auth();
-    const {
-      pincode,
-      city,
-      state,
-      country
-    } = await request.json();
+    const { pincode, city, state, country } = await request.json();
 
     if (!session || !session.user || !session.user.id) {
       return new NextResponse("Unauthorized Access", { status: 401 });
@@ -67,7 +62,7 @@ export async function PATCH(
         pincode,
         city,
         state,
-        country
+        country,
       },
     });
 

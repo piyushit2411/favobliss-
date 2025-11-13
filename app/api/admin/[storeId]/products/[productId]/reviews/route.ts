@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const allowedOrigins = [
   process.env.NEXT_PUBLIC_FRONTEND_URL,
   "http://localhost:3000",
-  "https://favobliss.vercel.app",
+  "https://www.electrax.in",
 ].filter(Boolean);
 
 export async function POST(
@@ -48,7 +48,7 @@ export async function POST(
       userId,
       categoryRatings = [],
       customDate,
-      title
+      title,
     } = validatedData.data;
 
     if (!params.productId) {
@@ -159,7 +159,8 @@ export async function GET(
   try {
     if (!params.productId) {
       return new NextResponse("Product ID is required", {
-        status: 400, headers,
+        status: 400,
+        headers,
       });
     }
 
